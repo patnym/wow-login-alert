@@ -1,3 +1,4 @@
 *.png
 *.jpg
 node_modules/
+*.wav

@@ -1,5 +1,6 @@
 const screenshot = require('screenshot-desktop');
 const resemble = require('resemblejs');
+const player = require('node-wav-player');
 
 switch (process.argv[2]) {
     case 'find-display': 
@@ -9,7 +10,7 @@ switch (process.argv[2]) {
         dryRun();
         break;
     case 'go': 
-        run();
+        run(true);
         break;
     default:
         console.log('Please use a verified commando  [find-display, test, go]');
@@ -19,7 +20,7 @@ function testDisplays() {
     screenshot.listDisplays().then((displays) => {
         let index = 0;
         displays.forEach(display => {
-            screenshot({ filename: `${index}-test.png`, screen: display.id });
+            screenshot({ filename: `${index}-ref.png`, screen: display.id });
             index++;
         });
     })
@@ -29,7 +30,7 @@ function dryRun() {
     run(false);
 }
 
-const MIS_MATCH_THRESHOLD = 50.0;
+const MIS_MATCH_THRESHOLD = process.argv[4] || 50.0;
 
 function run(continous) {
     let displayIndex = process.argv[3];
@@ -41,25 +42,36 @@ function run(continous) {
     }
     screenshot.listDisplays().then(async (displays) => {
         const display = displays[displayIndex];
-        const displayArea = display.height * display.width;
-        const imgPath = await screenshot({ filename: 'tmp.png', screen: display.id });
-        const data = await new Promise((res) => { 
-                resemble('tmp.png')
-                    .compareTo('window-border.png')
-                    .ignoreColors()
-                    .onComplete(function(data) {
-                        res(data);
-                    })
-                    .scaleToSameSize();
-            });
-        
-        if(MIS_MATCH_THRESHOLD > data.rawMisMatchPercentage) {
-            // This is still a loading screen
-            console.log('Still on loading screen, sorry! Hang in there!');
-        } else {
-            // BEEP BEEP WAKE UP, TIME TO GO!
-            console.log('You are no longer on a loading screen, time ta PLAY!');
-        }
-    })
+        do {
+            await screenshot({ filename: 'tmp.png', screen: display.id });
+            const data = await new Promise((res) => { 
+                    resemble('tmp.png')
+                        .compareTo('image-ref.png')
+                        .ignoreColors()
+                        .onComplete(function(data) {
+                            res(data);
+                        })
+                        .scaleToSameSize();
+                });
+            
+            if(MIS_MATCH_THRESHOLD > data.rawMisMatchPercentage) {
+                // This is still a loading screen
+                console.log('Still on loading screen, sorry! Hang in there!');
+            } else {
+                await soundAlarm(continous);
+            }
+        } while(continous);
+    });
+}
+
+async function soundAlarm(infinite) {
+    player.play({
+        path: 'alarm.wav',
+        loop: infinite
+      }).then(() => {
+        console.log('The wav file started to be played successfully.');
+      }).catch((error) => {
+        console.error(error);
+      });
 }
 

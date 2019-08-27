@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "node-wav-player": "^0.1.0",
     "resemblejs": "^3.2.1",
     "screenshot-desktop": "^1.9.0"
   }
