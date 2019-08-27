@@ -31,6 +31,7 @@ function dryRun() {
 }
 
 const MIS_MATCH_THRESHOLD = process.argv[4] || 50.0;
+const TIMEOUT = (process.argv[5] || 180) * 1000; //Every third minute by default
 
 function run(continous) {
     let displayIndex = process.argv[3];
@@ -60,7 +61,19 @@ function run(continous) {
             } else {
                 await soundAlarm(continous);
             }
+
+            if(continous) {
+                await delay(TIMEOUT);
+            }
         } while(continous);
+    });
+}
+
+function delay(ms) {
+    return new Promise((res) => {
+        setTimeout(() => {
+            res();
+        }, ms);
     });
 }
 
