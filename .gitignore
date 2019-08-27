@@ -1,4 +1,4 @@
 *.png
 *.jpg
 node_modules/
-*.wav
+test.js

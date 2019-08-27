@@ -1,16 +1,33 @@
 {
   "name": "wow-login-alert",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.5",
+  "description": "Sounds an alarm when the character screen is shown. To help us get some rest while waiting for the classic launch queues",
+  "main": "./bin/wow-login-alert.js",
+  "files": [
+    "bin",
+    "package.json",
+    "README.md",
+    "alarm.wav"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/electron/electron-packager.git"
+  },
+  "author": "Patrik Nyman",
+  "homepage": "https://github.com/electron/electron-packager",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "bin": {
+    "wow-login-alert": "./bin/wow-login-alert.js"
+  },
+  "license": "MIT",
   "dependencies": {
     "node-wav-player": "^0.1.0",
     "resemblejs": "^3.2.1",
     "screenshot-desktop": "^1.9.0"
+  },
+  "engines": {
+    "node": ">= 10.0"
   }
 }

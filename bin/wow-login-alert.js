@@ -1,6 +1,9 @@
+#!/usr/bin/env node
+
 const screenshot = require('screenshot-desktop');
 const resemble = require('resemblejs');
 const player = require('node-wav-player');
+const path = require('path');
 
 switch (process.argv[2]) {
     case 'find-display': 
@@ -23,6 +26,8 @@ function testDisplays() {
             screenshot({ filename: `${index}-ref.png`, screen: display.id });
             index++;
         });
+    }).catch((error) => {
+        console.error(error);
     })
 }
 
@@ -44,10 +49,10 @@ function run(continous) {
     screenshot.listDisplays().then(async (displays) => {
         const display = displays[displayIndex];
         do {
-            await screenshot({ filename: 'tmp.png', screen: display.id });
+            const tmpPath = await screenshot({ filename: './tmp.png', screen: display.id });
             const data = await new Promise((res) => { 
-                    resemble('tmp.png')
-                        .compareTo('image-ref.png')
+                    resemble(tmpPath)
+                        .compareTo(path.resolve(`./${displayIndex}-ref.png`))
                         .ignoreColors()
                         .onComplete(function(data) {
                             res(data);
@@ -79,7 +84,7 @@ function delay(ms) {
 
 async function soundAlarm(infinite) {
     player.play({
-        path: 'alarm.wav',
+        path: path.resolve(__dirname, '../alarm.wav'),
         loop: infinite
       }).then(() => {
         console.log('The wav file started to be played successfully.');
