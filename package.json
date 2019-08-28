@@ -1,6 +1,6 @@
 {
   "name": "wow-login-alert",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Sounds an alarm when the character screen is shown. To help us get some rest while waiting for the classic launch queues",
   "main": "./bin/wow-login-alert.js",
   "files": [
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron/electron-packager.git"
+    "url": "git+https://github.com/patnym/wow-login-alert.git"
   },
   "author": "Patrik Nyman",
-  "homepage": "https://github.com/electron/electron-packager",
+  "homepage": "https://github.com/patnym/wow-login-alert",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
